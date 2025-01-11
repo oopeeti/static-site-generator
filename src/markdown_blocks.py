@@ -1,4 +1,3 @@
-from nodes import HTMLNode
 from inline_markdown import *
 
 def markdown_to_blocks(markdown):
@@ -46,27 +45,6 @@ def block_to_block_type(block):
         return "ordered_list"
     return "paragraph"
 
-
-markdown = """# My Title
-
-This is a paragraph with *italic* and **bold** text.
-It also has a [link to Boot.dev](https://boot.dev) and an
-![image of a bear](https://example.com/bear.jpg) in it.
-
-* List item with **bold** text
-* List item with *italic* text
-* List item with a [link](https://boot.dev)
-
-1. Ordered list element one
-2. Ordered list element two
-3. Ordered list element three
-
-```This is code block```
-
-[link](https://boot.dev)
-
-> This is a quote with **bold** and *italic* text
-"""
 
 def text_to_children(text):
     text_nodes = text_to_textnodes(text)
@@ -161,6 +139,10 @@ def block_to_html_node(block):
         return quote_to_html_node(block)
             
     raise ValueError("Invalid block type")
-     
-nodes = markdown_to_html_node(markdown)
-print(nodes)
+
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        node = block_to_html_node(block)
+        if(node.tag == "h1"):
+            return block.strip("#").strip()
